@@ -27,8 +27,8 @@
             </div>
         </div>
     </nav>
+
     <!-- HERO INTRODUCTION -->
-    
     <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
             <span class="text-blue-500 font-mono text-xs uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">Engineering Portfolio</span>
@@ -172,6 +172,12 @@
         const requestForm = document.getElementById('cad-request-form');
         const heroViewer = document.getElementById('hero-viewer');
 
+        // State variables for auto-cycling models
+        let loadedModels = []; // Cache list of active models with media_url values
+        let currentModelIndex = 0;
+        let cycleIntervalId = null;
+        const CYCLE_TIME_MS = 12000; // Time interval to rotate active model (12 seconds)
+
         // Application Lifecycles hook
         document.addEventListener("DOMContentLoaded", () => {
             // Attach WebGL 3D load handlers dynamically to solve the loading freeze
@@ -220,6 +226,73 @@
             }, 4500);
         }
 
+        // 3D VIEWER SWAP ACTION ENGINE
+        function loadModelInHero(url, title, isManualClick = false) {
+            if (!url) return;
+            
+            // If user manually interacts, pause/reset the auto-cycle engine
+            if (isManualClick && cycleIntervalId) {
+                clearInterval(cycleIntervalId);
+                cycleIntervalId = null;
+                showToast("Auto-cycle paused. Feel free to inspect this design!");
+            }
+
+            // Sync visual active borders in the grid UI
+            highlightActiveCard(url);
+
+            // Safeguard: If the model is already actively loaded, don't trigger a visual reload cycle
+            if (heroViewer && heroViewer.getAttribute('src') === url) {
+                const placeholder = document.getElementById('viewer-placeholder');
+                if (placeholder) placeholder.classList.add('hidden');
+                heroViewer.classList.remove('opacity-0');
+                if (isManualClick) showToast(`"${title}" is already loaded in the viewer.`);
+                return;
+            }
+
+            const placeholder = document.getElementById('viewer-placeholder');
+            const status = document.getElementById('viewer-status');
+            
+            if (placeholder) {
+                placeholder.classList.remove('hidden');
+                status.textContent = `Loading ${title}...`;
+            }
+            if (heroViewer) {
+                heroViewer.classList.add('opacity-0');
+                heroViewer.setAttribute('src', url);
+            }
+            if (isManualClick) {
+                showToast(`Loading "${title}" in interactive 3D view...`);
+            }
+        }
+
+        // HIGHLIGHT ACTIVE CARD UTILITY
+        function highlightActiveCard(activeUrl) {
+            const cards = document.querySelectorAll('[data-model-url]');
+            cards.forEach(card => {
+                const cardUrl = card.getAttribute('data-model-url');
+                if (cardUrl === activeUrl) {
+                    card.classList.add('border-blue-500', 'shadow-blue-500/10', 'bg-slate-800/80');
+                    card.classList.remove('border-slate-800', 'bg-slate-850/50');
+                } else {
+                    card.classList.remove('border-blue-500', 'shadow-blue-500/10', 'bg-slate-800/80');
+                    card.classList.add('border-slate-800', 'bg-slate-850/50');
+                }
+            });
+        }
+
+        // AUTO-CYCLE ENGINE SCHEDULER
+        function startAutoCycle() {
+            if (loadedModels.length <= 1) return; // No cycling needed if 1 or 0 models exist
+            
+            if (cycleIntervalId) clearInterval(cycleIntervalId);
+            
+            cycleIntervalId = setInterval(() => {
+                currentModelIndex = (currentModelIndex + 1) % loadedModels.length;
+                const nextModel = loadedModels[currentModelIndex];
+                loadModelInHero(nextModel.media_url, nextModel.title, false);
+            }, CYCLE_TIME_MS);
+        }
+
         // 2. RETRIEVE PORTFOLIO GALLERY AND DRAWINGS
         async function loadPortfolioData() {
             try {
@@ -243,6 +316,9 @@
                 let drawingsHtml = '';
                 let defaultHeroModelSet = false;
 
+                // Cache active 3D models for cycle loop
+                loadedModels = galleryItems.filter(item => item.media_url);
+
                 // Render Gallery Items
                 galleryItems.forEach(item => {
                     if (!defaultHeroModelSet && item.media_url) {
@@ -251,19 +327,24 @@
                     }
 
                     galleryHtml += `
-                        <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 relative group">
+                        <div data-model-url="${item.media_url || ''}" class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 relative group">
                             <div>
                                 <h3 class="text-lg font-bold mb-2 tracking-tight">${item.title}</h3>
                                 <p class="text-sm text-slate-400 mb-6 leading-relaxed">${item.description}</p>
                             </div>
                             <div class="space-y-2.5">
+                                ${item.media_url ? `
+                                    <button onclick="loadModelInHero('${item.media_url}', '${item.title.replace(/'/g, "\\'")}', true)" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 mb-2 shadow-lg shadow-blue-600/10">
+                                        👁️ Preview
+                                    </button>
+                                ` : ''}
                                 ${item.stl_file_url ? `
-                                    <a href="${item.stl_file_url}" download class="block text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                                    <a href="${item.stl_file_url}" download class="block text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-650 text-slate-200 text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5">
                                         📥 Download .STL (For Printing)
                                     </a>` : ''}
                                 ${item.source_file_url ? `
-                                    <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-2 rounded text-slate-400 hover:text-slate-300 transition">
-                                        Source Assembly Document
+                                    <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-1.5 rounded text-slate-400 hover:text-slate-300 transition">
+                                        Download Source File Document
                                     </a>` : ''}
                             </div>
                         </div>
@@ -285,17 +366,20 @@
                     `;
                 });
 
-                // Fallback for Hero viewer if no items contain media_url
-                if (!defaultHeroModelSet) {
-                    heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
-                }
-
-                // Update DOM or output empty fallback
+                // Update UI or output empty fallback
                 galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed inside 'gallery_items'. Manage your database inside Supabase to populate this area.</div>`;
                 drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet. Manage your database inside Supabase to populate this area.</div>`;
 
+                if (defaultHeroModelSet) {
+                    highlightActiveCard(loadedModels[0].media_url);
+                    startAutoCycle();
+                } else {
+                    // Fallback for Hero viewer if no items contain media_url
+                    heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
+                }
+
             } catch (err) {
-                console.error("Supabase Database Retrieval Error:", err.message);
+                console.error("Database Retrieval Error:", err.message);
                 showFallbackDemo();
             }
         }
@@ -323,7 +407,7 @@
 
             try {
                 if (!_supabase) {
-                    throw new Error("Supabase is not configured yet.");
+                    throw new Error("Please try again later.");
                 }
 
                 const { error } = await _supabase
@@ -332,11 +416,11 @@
 
                 if (error) throw error;
 
-                showToast("🚀 Success! Your structural design brief has been saved directly to Supabase.");
+                showToast("🚀 Success! Your structural design brief has been submitted.");
                 requestForm.reset();
 
             } catch (err) {
-                showToast("Database Submission Failed: " + err.message, "error");
+                showToast("Project Brief Submission Failed: " + err.message, "error");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<span>Submit Project Brief</span>`;
@@ -351,25 +435,37 @@
             heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
             heroViewer.classList.remove('opacity-0');
 
+            // Build Fallback models index for demo auto-cycle
+            loadedModels = [
+                { media_url: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", title: "Robotic Gripper Actuator" },
+                { media_url: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb", title: "Neil Armstrong Suit Model" }
+            ];
+
             galleryContainer.innerHTML = `
-                <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
+                <div data-model-url="https://modelviewer.dev/shared-assets/models/Astronaut.glb" class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
                     <div>
                         <h3 class="text-lg font-bold mb-2 tracking-tight">Robotic Gripper Actuator</h3>
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">Parametric mechanical end-effector optimized for FDM 3D printing with integrated linkage structures.</p>
                     </div>
                     <div class="space-y-2.5">
-                        <button onclick="showToast('Setup complete! Live values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="loadModelInHero('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Robotic Gripper Actuator', true)" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 mb-2 shadow-lg shadow-blue-600/10">
+                            👁️ View in 3D Live Window
+                        </button>
+                        <button onclick="showToast('Setup complete! Live download values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5">
                             📥 Download .STL (Demo Mode)
                         </button>
                     </div>
                 </div>
-                <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
+                <div data-model-url="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb" class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
                     <div>
-                        <h3 class="text-lg font-bold mb-2 tracking-tight">NEMA 17 Mounting Assembly</h3>
-                        <p class="text-sm text-slate-400 mb-6 leading-relaxed">High precision bracket designed to absorb motor vibrations on aluminum extrusion tracks.</p>
+                        <h3 class="text-lg font-bold mb-2 tracking-tight">Neil Armstrong Suit Model</h3>
+                        <p class="text-sm text-slate-400 mb-6 leading-relaxed">High precision space suit model structure utilizing multi-channel textures and high vertex detailing.</p>
                     </div>
                     <div class="space-y-2.5">
-                        <button onclick="showToast('Setup complete! Live values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="loadModelInHero('https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb', 'Neil Armstrong Suit Model', true)" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 mb-2 shadow-lg shadow-blue-600/10">
+                            👁️ View in 3D Live Window
+                        </button>
+                        <button onclick="showToast('Setup complete! Live download values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5">
                             📥 Download .STL (Demo Mode)
                         </button>
                     </div>
@@ -389,6 +485,9 @@
                     </div>
                 </div>
             `;
+
+            highlightActiveCard(loadedModels[0].media_url);
+            startAutoCycle();
         }
     </script>
 </body>
