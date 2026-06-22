@@ -145,7 +145,6 @@
     <!-- SUPABASE CLIENT ENGINE JAVASCRIPT LAYER -->
     <script>
         // 1. SUPABASE CLIENT CONNECTIONS SETUP
-        // Paste your actual project credentials here
         const SUPABASE_URL = "https://yrpfevxzocpedpthknhi.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlycGZldnh6b2NwZWRwdGhrbmhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NDg5NjIsImV4cCI6MjA5NzUyNDk2Mn0.GMxuE_B17gwzUaqPlaHzwlY20i8XYaMNOoxY9WGijLw";
 
@@ -155,7 +154,7 @@
         // Verify that the config credentials contain actual URLs and keys rather than initial strings
         const isConfigured = 
             SUPABASE_URL && 
-            SUPABASE_URL !== "https://yrpfevxzocpedpthknhi.supabase.co" && 
+            SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" && 
             (SUPABASE_URL.startsWith("http://") || SUPABASE_URL.startsWith("https://"));
 
         if (isConfigured) {
