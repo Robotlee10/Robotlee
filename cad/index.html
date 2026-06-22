@@ -73,11 +73,11 @@
                     <p class="text-slate-400 text-sm mt-1">Download production-ready STL models and source design documents.</p>
                 </div>
                 <div class="mt-4 md:mt-0 flex gap-2">
-                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">FreeCAD &amp; AutoCAD</span>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">3D Assets</span>
                 </div>
             </div>
             <div id="gallery-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically loaded from Supabase portfolio_items (category: 'gallery') -->
+                <!-- Dynamically loaded from Supabase gallery_items table -->
                 <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
                     Retrieving CAD projects database...
                 </div>
@@ -91,7 +91,7 @@
                 <p class="text-slate-400 text-sm mt-1">Standard engineering sheets, tolerance models, and isometric assemblies.</p>
             </div>
             <div id="drawings-container" class="grid md:grid-cols-2 gap-8">
-                <!-- Dynamically loaded from Supabase portfolio_items (category: 'drawing') -->
+                <!-- Dynamically loaded from Supabase technical_drawings table -->
                 <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
                     Loading reference blueprints...
                 </div>
@@ -185,67 +185,67 @@
         // 2. RETRIEVE PORTFOLIO GALLERY AND DRAWINGS
         async function loadPortfolioData() {
             try {
-                const { data: items, error } = await _supabase
-                    .from('portfolio_items')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                // Fetch independently from individual custom database tables
+                const [galleryResult, drawingsResult] = await Promise.all([
+                    _supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
+                    _supabase.from('technical_drawings').select('*').order('created_at', { ascending: false })
+                ]);
 
-                if (error) throw error;
+                if (galleryResult.error) throw galleryResult.error;
+                if (drawingsResult.error) throw drawingsResult.error;
+
+                const galleryItems = galleryResult.data || [];
+                const technicalDrawings = drawingsResult.data || [];
 
                 let galleryHtml = '';
                 let drawingsHtml = '';
                 let defaultHeroModelSet = false;
 
-                items.forEach(item => {
-                    // Category Route 1: 3D Models / Assemblies
-                    if (item.category === 'gallery') {
-                        if (!defaultHeroModelSet && item.media_url) {
-                            heroViewer.setAttribute('src', item.media_url);
-                            document.getElementById('viewer-placeholder').classList.add('hidden');
-                            defaultHeroModelSet = true;
-                        }
-
-                        galleryHtml += `
-                            <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1">
-                                <div>
-                                    <div class="flex justify-between items-start mb-4">
-                                        <span class="px-2.5 py-1 text-xs font-mono rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/15 font-semibold tracking-wide">${item.software_tag || 'CAD'}</span>
-                                        <span class="text-xs text-slate-500 font-mono">${item.version_tag || 'v1.0'}</span>
-                                    </div>
-                                    <h3 class="text-lg font-bold mb-2 tracking-tight">${item.title}</h3>
-                                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">${item.description}</p>
-                                </div>
-                                <div class="space-y-2.5">
-                                    ${item.stl_file_url ? `
-                                        <a href="${item.stl_file_url}" download class="block text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
-                                            📥 Download .STL (For Printing)
-                                        </a>` : ''}
-                                    ${item.source_file_url ? `
-                                        <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-2 rounded text-slate-400 hover:text-slate-300 transition">
-                                            Source Assembly Document
-                                        </a>` : ''}
-                                </div>
-                            </div>
-                        `;
-                    } 
-                    // Category Route 2: Technical Blueprints / 2D Plans
-                    else if (item.category === 'drawing') {
-                        drawingsHtml += `
-                            <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg transition hover:border-slate-700">
-                                <div class="h-64 bg-slate-900 relative overflow-hidden">
-                                    <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-500">
-                                </div>
-                                <div class="p-5 bg-slate-850 border-t border-slate-800/80">
-                                    <h3 class="font-bold text-lg tracking-tight mb-1 text-slate-200">${item.title}</h3>
-                                    <p class="text-xs text-slate-400 leading-relaxed">${item.description}</p>
-                                </div>
-                            </div>
-                        `;
+                // Render Gallery Items
+                galleryItems.forEach(item => {
+                    if (!defaultHeroModelSet && item.media_url) {
+                        heroViewer.setAttribute('src', item.media_url);
+                        document.getElementById('viewer-placeholder').classList.add('hidden');
+                        defaultHeroModelSet = true;
                     }
+
+                    galleryHtml += `
+                        <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1">
+                            <div>
+                                <h3 class="text-lg font-bold mb-2 tracking-tight">${item.title}</h3>
+                                <p class="text-sm text-slate-400 mb-6 leading-relaxed">${item.description}</p>
+                            </div>
+                            <div class="space-y-2.5">
+                                ${item.stl_file_url ? `
+                                    <a href="${item.stl_file_url}" download class="block text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                                        📥 Download .STL (For Printing)
+                                    </a>` : ''}
+                                ${item.source_file_url ? `
+                                    <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-2 rounded text-slate-400 hover:text-slate-300 transition">
+                                        Source Assembly Document
+                                    </a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Render Technical Drawings
+                technicalDrawings.forEach(item => {
+                    drawingsHtml += `
+                        <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg transition hover:border-slate-700">
+                            <div class="h-64 bg-slate-900 relative overflow-hidden">
+                                <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-500">
+                            </div>
+                            <div class="p-5 bg-slate-850 border-t border-slate-800/80">
+                                <h3 class="font-bold text-lg tracking-tight mb-1 text-slate-200">${item.title}</h3>
+                                <p class="text-xs text-slate-400 leading-relaxed">${item.description}</p>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 // Update DOM or output empty fallback
-                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed in 'portfolio_items'.</div>`;
+                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed in 'gallery_items'.</div>`;
                 drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet.</div>`;
 
             } catch (err) {
@@ -305,10 +305,6 @@
             galleryContainer.innerHTML = `
                 <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
                     <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="px-2.5 py-1 text-xs font-mono rounded bg-orange-500/10 text-orange-400 border border-orange-500/15 font-semibold tracking-wide">FreeCAD</span>
-                            <span class="text-xs text-slate-500 font-mono">v1.2</span>
-                        </div>
                         <h3 class="text-lg font-bold mb-2 tracking-tight">Robotic Gripper Actuator</h3>
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">Parametric mechanical end-effector optimized for FDM 3D printing with integrated linkage structures.</p>
                     </div>
@@ -320,10 +316,6 @@
                 </div>
                 <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
                     <div>
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="px-2.5 py-1 text-xs font-mono rounded bg-blue-500/10 text-blue-400 border border-blue-500/15 font-semibold tracking-wide">AutoCAD</span>
-                            <span class="text-xs text-slate-500 font-mono">v2.0</span>
-                        </div>
                         <h3 class="text-lg font-bold mb-2 tracking-tight">NEMA 17 Mounting Assembly</h3>
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">High precision bracket designed to absorb motor vibrations on aluminum extrusion tracks.</p>
                     </div>
