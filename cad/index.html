@@ -23,56 +23,10 @@
             <div class="space-x-6 text-sm flex items-center">
                 <a href="#gallery" class="hover:text-blue-400 transition">3D Gallery</a>
                 <a href="#drawings" class="hover:text-blue-400 transition">Drawings</a>
-                <button onclick="toggleAdminPanel()" class="text-amber-400 hover:text-amber-300 transition font-mono flex items-center gap-1">
-                    <span>🛠️</span> <span class="hidden sm:inline">Admin</span>
-                </button>
                 <a href="#request" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium transition shadow-lg shadow-blue-600/15">Request Design</a>
             </div>
         </div>
     </nav>
-
-    <!-- CONTROL PANEL / CRUD DASHBOARD (Admin Panel) -->
-    <div id="admin-panel" class="hidden bg-slate-950 border-b border-amber-500/30 py-6 px-4 transition-all duration-300">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h3 class="text-lg font-mono font-bold text-amber-400">🛠️ Portfolio Database Control Panel</h3>
-                    <p class="text-xs text-slate-400">Direct write access to Supabase 'gallery_items' and 'technical_drawings'.</p>
-                </div>
-                <button onclick="toggleAdminPanel()" class="text-slate-500 hover:text-slate-300 text-sm font-mono">&times; Close Dashboard</button>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Add to 3D Gallery Form -->
-                <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
-                    <h4 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
-                        <span class="text-blue-400">📦</span> Add to 3D Gallery &amp; Downloads
-                    </h4>
-                    <form id="add-gallery-form" class="space-y-3 text-xs">
-                        <input type="text" id="gal-title" required placeholder="Project Title" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <textarea id="gal-desc" required placeholder="Short description of model tolerances, functions, and files..." rows="3" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none"></textarea>
-                        <input type="text" id="gal-media" placeholder="3D Model URL (.gltf or .glb)" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <input type="text" id="gal-source" placeholder="Source CAD Project Download URL (.FCStd / .DWG)" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <input type="text" id="gal-stl" placeholder="STL 3D Print File Download URL (.stl)" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded transition">Publish 3D Asset</button>
-                    </form>
-                </div>
-
-                <!-- Add to Technical Drawings Form -->
-                <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
-                    <h4 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
-                        <span class="text-purple-400">📐</span> Add to Technical Drawings
-                    </h4>
-                    <form id="add-drawing-form" class="space-y-3 text-xs">
-                        <input type="text" id="draw-title" required placeholder="Drawing Title" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <textarea id="draw-desc" required placeholder="Description details, line standards, scale..." rows="3" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none"></textarea>
-                        <input type="text" id="draw-media" required placeholder="Drawing Image Preview URL (JPG/PNG/SVG)" class="w-full bg-slate-950 border border-slate-850 rounded p-2 focus:border-blue-500 outline-none">
-                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded transition">Publish Blueprint</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- HERO INTRODUCTION -->
     <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-12 items-center">
@@ -105,8 +59,7 @@
                 auto-rotate 
                 camera-controls 
                 style="width: 100%; height: 100%; background-color: #0f172a;"
-                class="transition-opacity duration-500 opacity-0"
-                onload="handleViewerLoaded()">
+                class="transition-opacity duration-500 opacity-0">
             </model-viewer>
         </div>
     </header>
@@ -199,7 +152,6 @@
 
         // Initialize connection instance safety wrapper
         let _supabase = null;
-        let adminMode = false;
 
         const isConfigured = 
             SUPABASE_URL && 
@@ -222,28 +174,41 @@
 
         // Application Lifecycles hook
         document.addEventListener("DOMContentLoaded", () => {
+            // Attach WebGL 3D load handlers dynamically to solve the loading freeze
+            if (heroViewer) {
+                heroViewer.addEventListener('load', () => {
+                    const placeholder = document.getElementById('viewer-placeholder');
+                    if (placeholder) placeholder.classList.add('hidden');
+                    heroViewer.classList.remove('opacity-0');
+                });
+                heroViewer.addEventListener('error', (err) => {
+                    console.warn("Model viewer load/render stalled. Standard safety fallback activated.", err);
+                    const placeholder = document.getElementById('viewer-placeholder');
+                    if (placeholder) placeholder.classList.add('hidden');
+                    heroViewer.classList.remove('opacity-0');
+                });
+            }
+
             if (_supabase) {
                 loadPortfolioData();
             } else {
                 showFallbackDemo();
             }
             requestForm.addEventListener("submit", handleFormSubmission);
-            
-            // Set up Admin form submission event handlers
-            document.getElementById('add-gallery-form').addEventListener('submit', handleAddGalleryItem);
-            document.getElementById('add-drawing-form').addEventListener('submit', handleAddDrawingItem);
         });
 
         // TOAST NOTIFICATION UTILITY
         function showToast(message, type = "success") {
             const toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) return;
+            
             const toast = document.createElement('div');
             toast.className = `p-4 rounded-lg shadow-lg text-xs font-mono font-bold tracking-wide transition-all duration-300 transform translate-y-2 pointer-events-auto flex items-center justify-between gap-3 ${
                 type === 'error' ? 'bg-red-500/90 text-white border border-red-400' : 'bg-slate-950/90 border border-slate-800 text-blue-400'
             }`;
             toast.innerHTML = `
                 <span>${message}</span>
-                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">&times;</button>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white ml-2">&times;</button>
             `;
             toastContainer.appendChild(toast);
             setTimeout(() => {
@@ -253,24 +218,6 @@
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
             }, 4500);
-        }
-
-        // Toggle admin panel view
-        function toggleAdminPanel() {
-            const panel = document.getElementById('admin-panel');
-            panel.classList.toggle('hidden');
-            adminMode = !panel.classList.contains('hidden');
-            // Refresh content to show/hide delete controls if configured
-            if (_supabase) {
-                loadPortfolioData();
-            } else {
-                showFallbackDemo();
-            }
-        }
-
-        function handleViewerLoaded() {
-            document.getElementById('viewer-placeholder').classList.add('hidden');
-            heroViewer.classList.remove('opacity-0');
         }
 
         // 2. RETRIEVE PORTFOLIO GALLERY AND DRAWINGS
@@ -288,7 +235,7 @@
                 const galleryItems = galleryResult.data || [];
                 const technicalDrawings = drawingsResult.data || [];
 
-                // Reset inner containers properly (fixes old .html property bug)
+                // Reset inner containers properly
                 galleryContainer.innerHTML = "";
                 drawingsContainer.innerHTML = "";
 
@@ -305,11 +252,6 @@
 
                     galleryHtml += `
                         <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 relative group">
-                            ${adminMode ? `
-                                <button onclick="deleteRow('gallery_items', '${item.id}')" class="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white p-1.5 rounded-lg text-xs font-bold font-mono transition z-10">
-                                    🗑️ Delete
-                                </button>
-                            ` : ''}
                             <div>
                                 <h3 class="text-lg font-bold mb-2 tracking-tight">${item.title}</h3>
                                 <p class="text-sm text-slate-400 mb-6 leading-relaxed">${item.description}</p>
@@ -332,11 +274,6 @@
                 technicalDrawings.forEach(item => {
                     drawingsHtml += `
                         <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg transition hover:border-slate-700">
-                            ${adminMode ? `
-                                <button onclick="deleteRow('technical_drawings', '${item.id}')" class="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white p-1.5 rounded-lg text-xs font-bold font-mono transition z-10 shadow-lg">
-                                    🗑️ Delete
-                                </button>
-                            ` : ''}
                             <div class="h-64 bg-slate-900 relative overflow-hidden">
                                 <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-500">
                             </div>
@@ -350,13 +287,12 @@
 
                 // Fallback for Hero viewer if no items contain media_url
                 if (!defaultHeroModelSet) {
-                    // Load standard structural demo model
                     heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
                 }
 
                 // Update DOM or output empty fallback
-                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed in 'gallery_items'. Use the admin panel to add some.</div>`;
-                drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet. Use the admin panel to add some.</div>`;
+                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed inside 'gallery_items'. Manage your database inside Supabase to populate this area.</div>`;
+                drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet. Manage your database inside Supabase to populate this area.</div>`;
 
             } catch (err) {
                 console.error("Supabase Database Retrieval Error:", err.message);
@@ -387,7 +323,7 @@
 
             try {
                 if (!_supabase) {
-                    throw new Error("Supabase is not configured yet. Configure connection keys on lines 164 & 165.");
+                    throw new Error("Supabase is not configured yet.");
                 }
 
                 const { error } = await _supabase
@@ -407,69 +343,11 @@
             }
         }
 
-        // 4. ADMIN PANEL CRUD: INSERT & DELETE METHODS
-        async function handleAddGalleryItem(e) {
-            e.preventDefault();
-            const payload = {
-                title: document.getElementById('gal-title').value,
-                description: document.getElementById('gal-desc').value,
-                media_url: document.getElementById('gal-media').value || null,
-                source_file_url: document.getElementById('gal-source').value || null,
-                stl_file_url: document.getElementById('gal-stl').value || null
-            };
-
-            try {
-                const { error } = await _supabase.from('gallery_items').insert([payload]);
-                if (error) throw error;
-
-                showToast("📦 Live 3D asset entry deployed successfully!");
-                document.getElementById('add-gallery-form').reset();
-                loadPortfolioData();
-            } catch (err) {
-                showToast("Database Write Blocked: " + err.message, "error");
-            }
-        }
-
-        async function handleAddDrawingItem(e) {
-            e.preventDefault();
-            const payload = {
-                title: document.getElementById('draw-title').value,
-                description: document.getElementById('draw-desc').value,
-                media_url: document.getElementById('draw-media').value
-            };
-
-            try {
-                const { error } = await _supabase.from('technical_drawings').insert([payload]);
-                if (error) throw error;
-
-                showToast("📐 Blueprint asset entry deployed successfully!");
-                document.getElementById('add-drawing-form').reset();
-                loadPortfolioData();
-            } catch (err) {
-                showToast("Database Write Blocked: " + err.message, "error");
-            }
-        }
-
-        async function deleteRow(table, id) {
-            // Replaced default confirm with modern verification flow
-            const confirmDelete = prompt(`Type "DELETE" to confirm destructive drop on row ${id}:`);
-            if (confirmDelete === "DELETE") {
-                try {
-                    const { error } = await _supabase.from(table).delete().eq('id', id);
-                    if (error) throw error;
-
-                    showToast("🗑️ Item successfully wiped from Supabase production matrix.");
-                    loadPortfolioData();
-                } catch (err) {
-                    showToast("Deletion Failure: " + err.message, "error");
-                }
-            }
-        }
-
-        // 5. FALLBACK DEMO RENDERER (Fallback if Supabase connection fails)
+        // 4. FALLBACK DEMO RENDERER (Fallback if Supabase connection fails)
         function showFallbackDemo() {
             // Remove Loading visual placeholder
-            document.getElementById('viewer-placeholder').classList.add('hidden');
+            const placeholder = document.getElementById('viewer-placeholder');
+            if (placeholder) placeholder.classList.add('hidden');
             heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
             heroViewer.classList.remove('opacity-0');
 
@@ -480,7 +358,7 @@
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">Parametric mechanical end-effector optimized for FDM 3D printing with integrated linkage structures.</p>
                     </div>
                     <div class="space-y-2.5">
-                        <button onclick="showToast('Setup complete! Live values will pull once you add data to Supabase.', 'error')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="showToast('Setup complete! Live values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             📥 Download .STL (Demo Mode)
                         </button>
                     </div>
@@ -491,7 +369,7 @@
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">High precision bracket designed to absorb motor vibrations on aluminum extrusion tracks.</p>
                     </div>
                     <div class="space-y-2.5">
-                        <button onclick="showToast('Setup complete! Live values will pull once you add data to Supabase.', 'error')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                        <button onclick="showToast('Setup complete! Live values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
                             📥 Download .STL (Demo Mode)
                         </button>
                     </div>
