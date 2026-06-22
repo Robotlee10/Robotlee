@@ -4,122 +4,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAD Showcase | robotlee.xyz</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Model Viewer for interactive WebGL 3D views -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <!-- Supabase JS Client library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
+    <!-- NAVIGATION HEADER -->
     <nav class="border-b border-slate-800 p-4 sticky top-0 bg-slate-900/90 backdrop-blur z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="#" class="font-mono text-xl font-bold tracking-wider text-blue-400">cad.robotlee.xyz</a>
-            <div class="space-x-6 text-sm">
-                <a href="#gallery" class="hover:text-blue-400">Gallery</a>
-                <a href="#drawings" class="hover:text-blue-400">Drawings</a>
-                <a href="#blog" class="hover:text-blue-400">Blog</a>
-                <a href="#request" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium">Request Design</a>
+            <a href="#" class="font-mono text-xl font-bold tracking-wider text-blue-400 hover:text-blue-300 transition">cad.robotlee.xyz</a>
+            <div class="space-x-6 text-sm flex items-center">
+                <a href="#gallery" class="hover:text-blue-400 transition">3D Gallery</a>
+                <a href="#drawings" class="hover:text-blue-400 transition">Drawings</a>
+                <a href="#request" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium transition shadow-lg shadow-blue-600/15">Request Design</a>
             </div>
         </div>
     </nav>
 
-    <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-8 items-center">
+    <!-- HERO INTRODUCTION -->
+    <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
-            <span class="text-blue-500 font-mono text-xs uppercase tracking-widest">Engineering Portfolio</span>
-            <h1 class="text-4xl md:text-5xl font-black mt-2 mb-4">CAD & Mechanical Design Showcase</h1>
-            <p class="text-slate-400 mb-6">Exploring precision engineering through parametric designs, AutoCAD schematics, and functional 3D prints.</p>
+            <span class="text-blue-500 font-mono text-xs uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">Engineering Portfolio</span>
+            <h1 class="text-4xl md:text-5xl font-black mt-4 mb-4 leading-tight">CAD & Mechanical Design Showcase</h1>
+            <p class="text-slate-400 text-base md:text-lg mb-6 leading-relaxed">Exploring precision engineering through parametric designs, AutoCAD schematics, and functional 3D prints.</p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#request" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-semibold px-6 py-3 rounded-lg transition">
+                    Inquire Custom CAD
+                </a>
+                <a href="#gallery" class="text-blue-400 hover:text-blue-300 font-medium px-6 py-3 transition flex items-center gap-2">
+                    Explore Models &rarr;
+                </a>
+            </div>
         </div>
-        <div class="bg-slate-800 rounded-xl h-80 border border-slate-700 relative overflow-hidden">
+        <div class="bg-slate-850 rounded-2xl h-80 border border-slate-800 relative overflow-hidden shadow-2xl">
+            <!-- Loading Indicator shown while 3D file initializes -->
+            <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-slate-500 text-sm gap-2 z-10">
+                <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span>Initializing 3D Viewer...</span>
+            </div>
             <model-viewer 
                 id="hero-viewer"
                 src="" 
-                alt="Featured 3D mechanical part" 
-                auto-rotate camera-controls 
-                style="width: 100%; height: 100%; background-color: #1e293b;">
+                alt="Featured 3D engineering part" 
+                auto-rotate 
+                camera-controls 
+                style="width: 100%; height: 100%; background-color: #0f172a;"
+                class="opacity-0 transition-opacity duration-500"
+                onload="document.getElementById('viewer-placeholder').classList.add('hidden'); this.classList.remove('opacity-0')">
             </model-viewer>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+    <!-- CONTENT PORTFOLIO -->
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-20 flex-grow w-full">
         
-        <section id="gallery">
-            <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">📦 Project Files & Downloads</h2>
+        <!-- SECTION 1: 3D MODEL GALLERY & STL DOWNLOADS -->
+        <section id="gallery" class="scroll-mt-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold tracking-tight">📦 Project Files & Downloads</h2>
+                    <p class="text-slate-400 text-sm mt-1">Download production-ready STL models and source design documents.</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex gap-2">
+                    <span class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">FreeCAD &amp; AutoCAD</span>
+                </div>
+            </div>
             <div id="gallery-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <p class="text-slate-500 text-sm italic col-span-full">Loading gallery files...</p>
+                <!-- Dynamically loaded from Supabase portfolio_items (category: 'gallery') -->
+                <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
+                    Retrieving CAD projects database...
+                </div>
             </div>
         </section>
 
-        <section id="drawings">
-            <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">📐 Technical Blueprints</h2>
-            <div id="drawings-container" class="grid md:grid-cols-2 gap-6">
-                <p class="text-slate-500 text-sm italic col-span-full">Loading blueprint sheets...</p>
+        <!-- SECTION 2: TECHNICAL DRAWINGS -->
+        <section id="drawings" class="scroll-mt-24">
+            <div class="mb-8 border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-bold tracking-tight">📐 Technical Blueprints</h2>
+                <p class="text-slate-400 text-sm mt-1">Standard engineering sheets, tolerance models, and isometric assemblies.</p>
+            </div>
+            <div id="drawings-container" class="grid md:grid-cols-2 gap-8">
+                <!-- Dynamically loaded from Supabase portfolio_items (category: 'drawing') -->
+                <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
+                    Loading reference blueprints...
+                </div>
             </div>
         </section>
 
-        <section id="blog">
-            <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">✍️ Engineering Blog</h2>
-            <div id="blog-container" class="space-y-4">
-                <p class="text-slate-500 text-sm italic">Loading blog entries...</p>
+        <!-- SECTION 3: DESIGN INTAKE REQUEST SUBMISSION -->
+        <section id="request" class="scroll-mt-24 max-w-2xl mx-auto bg-slate-800/40 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm relative shadow-xl">
+            <div class="absolute top-0 right-0 p-4 opacity-5">
+                <svg class="w-24 h-24 text-slate-100" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
             </div>
-        </section>
-
-        <section id="request" class="max-w-2xl mx-auto bg-slate-800 border border-slate-700 rounded-xl p-8">
             <h2 class="text-2xl font-bold mb-2">💡 Request a Custom CAD Design</h2>
-            <p class="text-slate-400 text-sm mb-6">Have an idea or an assembly drawing that needs modeling? Submit your specifications below to start a commission.</p>
+            <p class="text-slate-400 text-sm mb-6">Need custom engineering components, standard drafting, or parametric models? Submit your spec sheet parameters below to log a production request.</p>
             
-            <form id="cad-request-form" class="space-y-4 text-sm">
-                <div>
-                    <label class="block font-mono text-slate-400 mb-1">Your Name</label>
-                    <input type="text" id="req-name" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100">
+            <form id="cad-request-form" class="space-y-4 text-sm relative z-10">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Your Name</label>
+                        <input type="text" id="req-name" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Email Address</label>
+                        <input type="email" id="req-email" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="john@example.com">
+                    </div>
                 </div>
                 <div>
-                    <label class="block font-mono text-slate-400 mb-1">Email Address</label>
-                    <input type="email" id="req-email" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100">
-                </div>
-                <div>
-                    <label class="block font-mono text-slate-400 mb-1">Target Software Preferred</label>
-                    <select id="req-software" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-300">
+                    <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Target Software Format Preference</label>
+                    <select id="req-software" class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-300 transition">
                         <option value="FreeCAD (.FCStd)">FreeCAD (.FCStd)</option>
                         <option value="AutoCAD (.DWG)">AutoCAD (.DWG)</option>
                         <option value="Universal (.STEP / .STL)">Universal (.STEP / .STL)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-mono text-slate-400 mb-1">Project Scope & Tolerances</label>
-                    <textarea id="req-scope" rows="4" required placeholder="Describe mechanical functions, dimensions, or physical constraints..." class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100"></textarea>
+                    <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Project Scope &amp; Tolerances</label>
+                    <textarea id="req-scope" rows="4" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="Detail component dimensions, fits, tolerances, mechanical actions, and assembly parameters..."></textarea>
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded transition shadow-lg shadow-blue-600/20">
-                    Submit Project Brief
+                <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 flex justify-center items-center gap-2">
+                    <span>Submit Project Brief</span>
                 </button>
             </form>
         </section>
     </main>
 
     <footer class="text-center py-8 border-t border-slate-800 text-xs text-slate-500 font-mono">
-        &copy; 2026 robotlee.xyz | All Rights Reserved.
+        &copy; 2026 robotlee.xyz | Engineered for Precision.
     </footer>
 
+    <!-- SUPABASE CLIENT ENGINE JAVASCRIPT LAYER -->
     <script>
-        // 1. CONFIGURATION CONFIG SETTINGS
+        // 1. SUPABASE CLIENT CONNECTIONS SETUP
+        // Paste your actual project credentials here
         const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
         const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-        // Initialize Supabase Client Connection Instance
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize connection instance safety wrapper
+        let _supabase = null;
 
-        // DOM Elements
+        // Verify that the config credentials contain actual URLs and keys rather than initial strings
+        const isConfigured = 
+            SUPABASE_URL && 
+            SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL" && 
+            (SUPABASE_URL.startsWith("http://") || SUPABASE_URL.startsWith("https://"));
+
+        if (isConfigured) {
+            try {
+                _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } catch (e) {
+                console.error("Supabase script CDN failed to initialize:", e);
+            }
+        }
+
+        // Layout targets
         const galleryContainer = document.getElementById('gallery-container');
         const drawingsContainer = document.getElementById('drawings-container');
-        const blogContainer = document.getElementById('blog-container');
         const requestForm = document.getElementById('cad-request-form');
         const heroViewer = document.getElementById('hero-viewer');
 
-        // Application Startup Lifecycle Hook
+        // Application Lifecycles hook
         document.addEventListener("DOMContentLoaded", () => {
-            loadPortfolioData();
+            if (_supabase) {
+                loadPortfolioData();
+            } else {
+                showFallbackDemo();
+            }
             requestForm.addEventListener("submit", handleFormSubmission);
         });
 
-        // 2. FETCH AND DISTRIBUTE DATABASE CONTENT
+        // 2. RETRIEVE PORTFOLIO GALLERY AND DRAWINGS
         async function loadPortfolioData() {
             try {
                 const { data: items, error } = await _supabase
@@ -129,83 +192,83 @@
 
                 if (error) throw error;
 
-                // Clear containers before rendering
-                galleryContainer.html = "";
-                drawingsContainer.html = "";
-                blogContainer.html = "";
-
                 let galleryHtml = '';
                 let drawingsHtml = '';
-                let blogHtml = '';
                 let defaultHeroModelSet = false;
 
                 items.forEach(item => {
+                    // Category Route 1: 3D Models / Assemblies
                     if (item.category === 'gallery') {
-                        // Set the first available 3D model link inside the interactive top hero viewer box
                         if (!defaultHeroModelSet && item.media_url) {
                             heroViewer.setAttribute('src', item.media_url);
+                            document.getElementById('viewer-placeholder').classList.add('hidden');
                             defaultHeroModelSet = true;
                         }
 
                         galleryHtml += `
-                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 flex flex-col justify-between">
+                            <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1">
                                 <div>
-                                    <div class="flex justify-between items-start mb-3">
-                                        <span class="px-2 py-1 text-xs font-mono rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">${item.software_tag || 'CAD'}</span>
-                                        <span class="text-xs text-slate-500">${item.version_tag || 'v1.0'}</span>
+                                    <div class="flex justify-between items-start mb-4">
+                                        <span class="px-2.5 py-1 text-xs font-mono rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/15 font-semibold tracking-wide">${item.software_tag || 'CAD'}</span>
+                                        <span class="text-xs text-slate-500 font-mono">${item.version_tag || 'v1.0'}</span>
                                     </div>
-                                    <h3 class="text-lg font-bold mb-1">${item.title}</h3>
-                                    <p class="text-sm text-slate-400 mb-4">${item.description}</p>
+                                    <h3 class="text-lg font-bold mb-2 tracking-tight">${item.title}</h3>
+                                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">${item.description}</p>
                                 </div>
-                                <div class="space-y-2">
-                                    ${item.stl_file_url ? `<a href="${item.stl_file_url}" download class="block text-center bg-slate-700 hover:bg-slate-600 text-sm font-medium py-2 rounded transition">📥 Download .STL (For Printing)</a>` : ''}
-                                    ${item.source_file_url ? `<a href="${item.source_file_url}" download class="block text-center border border-slate-700 hover:bg-slate-800 text-xs font-mono py-1 rounded text-slate-400">Source Project File</a>` : ''}
+                                <div class="space-y-2.5">
+                                    ${item.stl_file_url ? `
+                                        <a href="${item.stl_file_url}" download class="block text-center bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                                            📥 Download .STL (For Printing)
+                                        </a>` : ''}
+                                    ${item.source_file_url ? `
+                                        <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-2 rounded text-slate-400 hover:text-slate-300 transition">
+                                            Source Assembly Document
+                                        </a>` : ''}
                                 </div>
                             </div>
                         `;
                     } 
+                    // Category Route 2: Technical Blueprints / 2D Plans
                     else if (item.category === 'drawing') {
                         drawingsHtml += `
-                            <div class="group relative bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-                                <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition">
-                                <div class="p-4 bg-slate-800/90 absolute bottom-0 inset-x-0 border-t border-slate-700">
-                                    <h3 class="font-bold">${item.title}</h3>
-                                    <p class="text-xs text-slate-400">${item.description}</p>
+                            <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg transition hover:border-slate-700">
+                                <div class="h-64 bg-slate-900 relative overflow-hidden">
+                                    <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-500">
+                                </div>
+                                <div class="p-5 bg-slate-850 border-t border-slate-800/80">
+                                    <h3 class="font-bold text-lg tracking-tight mb-1 text-slate-200">${item.title}</h3>
+                                    <p class="text-xs text-slate-400 leading-relaxed">${item.description}</p>
                                 </div>
                             </div>
-                        `;
-                    } 
-                    else if (item.category === 'blog') {
-                        const postDate = new Date(item.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                        blogHtml += `
-                            <article class="p-5 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:border-slate-600 transition">
-                                <span class="text-xs font-mono text-blue-400">${postDate}</span>
-                                <h3 class="text-xl font-bold mt-1 mb-2 hover:text-blue-300 cursor-pointer">${item.title}</h3>
-                                <p class="text-slate-400 text-sm">${item.description}</p>
-                            </article>
                         `;
                     }
                 });
 
-                // Insert into UI or fallback to empty state notice messages
-                galleryContainer.innerHTML = galleryHtml || `<p class="text-slate-500 text-sm italic col-span-full">No active 3D projects deployed yet.</p>`;
-                drawingsContainer.innerHTML = drawingsHtml || `<p class="text-slate-500 text-sm italic col-span-full">No mechanical drawings uploaded yet.</p>`;
-                blogContainer.innerHTML = blogHtml || `<p class="text-slate-500 text-sm italic">The engineering notebook is currently empty.</p>`;
+                // Update DOM or output empty fallback
+                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed in 'portfolio_items'.</div>`;
+                drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet.</div>`;
 
             } catch (err) {
-                console.error("Error connecting to database data nodes:", err.message);
+                console.error("Supabase Database Retrieval Error:", err.message);
+                showFallbackDemo();
             }
         }
 
-        // 3. SECURELY INSERT CLIENT INTAKE REQUESTS
+        // 3. SECURE DESIGN INTAKE INSERTS
         async function handleFormSubmission(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
-            submitBtn.innerText = "Processing Transmission...";
+            submitBtn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span>Processing Transmission...</span>
+            `;
 
-            const requestPayload = {
+            const payload = {
                 name: document.getElementById('req-name').value,
                 email: document.getElementById('req-email').value,
                 software: document.getElementById('req-software').value,
@@ -213,21 +276,78 @@
             };
 
             try {
+                if (!_supabase) {
+                    throw new Error("Supabase is not configured yet. Configure connection keys on lines 164 & 165.");
+                }
+
                 const { error } = await _supabase
                     .from('design_requests')
-                    .insert([requestPayload]);
+                    .insert([payload]);
 
                 if (error) throw error;
 
-                alert("🚀 Success! Your structural brief has been securely cataloged.");
+                alert("🚀 Success! Your structural design brief has been saved directly to Supabase.");
                 requestForm.reset();
 
             } catch (err) {
-                alert("Database submission failure: " + err.message);
+                alert("Database Submission Failed: " + err.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Submit Project Brief";
+                submitBtn.innerHTML = `<span>Submit Project Brief</span>`;
             }
+        }
+
+        // 4. FALLBACK DEMO RENDERER (Fallback if Supabase credentials are not added yet)
+        function showFallbackDemo() {
+            // Remove Loading visual placeholder
+            document.getElementById('viewer-placeholder').classList.add('hidden');
+
+            galleryContainer.innerHTML = `
+                <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-2.5 py-1 text-xs font-mono rounded bg-orange-500/10 text-orange-400 border border-orange-500/15 font-semibold tracking-wide">FreeCAD</span>
+                            <span class="text-xs text-slate-500 font-mono">v1.2</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 tracking-tight">Robotic Gripper Actuator</h3>
+                        <p class="text-sm text-slate-400 mb-6 leading-relaxed">Parametric mechanical end-effector optimized for FDM 3D printing with integrated linkage structures.</p>
+                    </div>
+                    <div class="space-y-2.5">
+                        <button onclick="alert('Configure Supabase URL and Key in index.html to enable live download routes.')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                            📥 Download .STL (Demo Mode)
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="px-2.5 py-1 text-xs font-mono rounded bg-blue-500/10 text-blue-400 border border-blue-500/15 font-semibold tracking-wide">AutoCAD</span>
+                            <span class="text-xs text-slate-500 font-mono">v2.0</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2 tracking-tight">NEMA 17 Mounting Assembly</h3>
+                        <p class="text-sm text-slate-400 mb-6 leading-relaxed">High precision bracket designed to absorb motor vibrations on aluminum extrusion tracks.</p>
+                    </div>
+                    <div class="space-y-2.5">
+                        <button onclick="alert('Configure Supabase URL and Key in index.html to enable live download routes.')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-sm font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-1.5">
+                            📥 Download .STL (Demo Mode)
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            drawingsContainer.innerHTML = `
+                <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg hover:border-slate-700 transition">
+                    <div class="h-64 bg-slate-900 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-slate-700 group-hover:scale-110 transition duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="p-5 bg-slate-850 border-t border-slate-800/80">
+                        <h3 class="font-bold text-lg tracking-tight mb-1 text-slate-200">Enclosure Structural Framing (AutoCAD 2026)</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">Detailed drawing utilizing ASME Y14.5 projection metrics with standard limits and fits.</p>
+                    </div>
+                </div>
+            `;
         }
     </script>
 </body>
