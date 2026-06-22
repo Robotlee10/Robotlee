@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAD Showcase | robotlee.xyz</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans">
@@ -13,196 +14,219 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="#" class="font-mono text-xl font-bold tracking-wider text-blue-400">cad.robotlee.xyz</a>
             <div class="space-x-6 text-sm">
-                <a href="#gallery-section" class="hover:text-blue-400">3D Gallery</a>
-                <a href="#drawings-section" class="hover:text-blue-400">Drawings</a>
-                <a href="#blog-section" class="hover:text-blue-400">Blog</a>
-                <a href="#admin-section" class="text-amber-400 hover:underline">🛠️ Admin Tool</a>
+                <a href="#gallery" class="hover:text-blue-400">Gallery</a>
+                <a href="#drawings" class="hover:text-blue-400">Drawings</a>
+                <a href="#blog" class="hover:text-blue-400">Blog</a>
                 <a href="#request" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium">Request Design</a>
             </div>
         </div>
     </nav>
 
+    <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-8 items-center">
+        <div>
+            <span class="text-blue-500 font-mono text-xs uppercase tracking-widest">Engineering Portfolio</span>
+            <h1 class="text-4xl md:text-5xl font-black mt-2 mb-4">CAD & Mechanical Design Showcase</h1>
+            <p class="text-slate-400 mb-6">Exploring precision engineering through parametric designs, AutoCAD schematics, and functional 3D prints.</p>
+        </div>
+        <div class="bg-slate-800 rounded-xl h-80 border border-slate-700 relative overflow-hidden">
+            <model-viewer 
+                id="hero-viewer"
+                src="" 
+                alt="Featured 3D mechanical part" 
+                auto-rotate camera-controls 
+                style="width: 100%; height: 100%; background-color: #1e293b;">
+            </model-viewer>
+        </div>
+    </header>
+
     <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
         
-        <section id="gallery-section">
-            <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">📦 3D Model Gallery</h2>
-            <div id="gallery-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
+        <section id="gallery">
+            <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">📦 Project Files & Downloads</h2>
+            <div id="gallery-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p class="text-slate-500 text-sm italic col-span-full">Loading gallery files...</p>
+            </div>
         </section>
 
-        <section id="drawings-section">
+        <section id="drawings">
             <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">📐 Technical Blueprints</h2>
-            <div id="drawings-grid" class="grid md:grid-cols-2 gap-6">
-                </div>
+            <div id="drawings-container" class="grid md:grid-cols-2 gap-6">
+                <p class="text-slate-500 text-sm italic col-span-full">Loading blueprint sheets...</p>
+            </div>
         </section>
 
-        <section id="blog-section">
+        <section id="blog">
             <h2 class="text-2xl font-bold mb-6 border-b border-slate-800 pb-2">✍️ Engineering Blog</h2>
-            <div id="blog-feed" class="space-y-4">
-                </div>
+            <div id="blog-container" class="space-y-4">
+                <p class="text-slate-500 text-sm italic">Loading blog entries...</p>
+            </div>
         </section>
 
         <section id="request" class="max-w-2xl mx-auto bg-slate-800 border border-slate-700 rounded-xl p-8">
             <h2 class="text-2xl font-bold mb-2">💡 Request a Custom CAD Design</h2>
-            <p class="text-slate-400 text-sm mb-6">Submit specifications to save directly into the system database.</p>
+            <p class="text-slate-400 text-sm mb-6">Have an idea or an assembly drawing that needs modeling? Submit your specifications below to start a commission.</p>
             
-            <form id="design-intake-form" class="space-y-4 text-sm">
+            <form id="cad-request-form" class="space-y-4 text-sm">
                 <div>
                     <label class="block font-mono text-slate-400 mb-1">Your Name</label>
-                    <input type="text" id="form-name" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500">
+                    <input type="text" id="req-name" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100">
                 </div>
                 <div>
                     <label class="block font-mono text-slate-400 mb-1">Email Address</label>
-                    <input type="email" id="form-email" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500">
+                    <input type="email" id="req-email" required class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100">
                 </div>
                 <div>
-                    <label class="block font-mono text-slate-400 mb-1">Target Software</label>
-                    <select id="form-software" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 text-slate-300">
-                        <option value="FreeCAD">FreeCAD (.FCStd)</option>
-                        <option value="AutoCAD">AutoCAD (.DWG)</option>
+                    <label class="block font-mono text-slate-400 mb-1">Target Software Preferred</label>
+                    <select id="req-software" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-300">
+                        <option value="FreeCAD (.FCStd)">FreeCAD (.FCStd)</option>
+                        <option value="AutoCAD (.DWG)">AutoCAD (.DWG)</option>
+                        <option value="Universal (.STEP / .STL)">Universal (.STEP / .STL)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-mono text-slate-400 mb-1">Project Scope</label>
-                    <textarea id="form-scope" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none" placeholder="Describe physical constraints..."></textarea>
+                    <label class="block font-mono text-slate-400 mb-1">Project Scope & Tolerances</label>
+                    <textarea id="req-scope" rows="4" required placeholder="Describe mechanical functions, dimensions, or physical constraints..." class="w-full bg-slate-900 border border-slate-700 rounded p-2.5 focus:outline-none focus:border-blue-500 text-slate-100"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded transition">
-                    Submit to Supabase
+                <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded transition shadow-lg shadow-blue-600/20">
+                    Submit Project Brief
                 </button>
             </form>
         </section>
-
-        <section id="admin-section" class="bg-slate-950 border border-amber-500/30 rounded-xl p-8 space-y-6">
-            <div class="border-b border-slate-800 pb-2">
-                <h2 class="text-xl font-bold text-amber-400">🛠️ Content Management System Panel</h2>
-                <p class="text-xs text-slate-400">Easily append records or wipe elements out of live production arrays.</p>
-            </div>
-            
-            <form id="admin-add-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <input type="text" id="admin-title" placeholder="Item Title / Post Name" required class="bg-slate-900 border border-slate-700 rounded p-2">
-                <input type="text" id="admin-url" placeholder="Image URL / Media Attachment Link" required class="bg-slate-900 border border-slate-700 rounded p-2">
-                <select id="admin-category" class="bg-slate-900 border border-slate-700 rounded p-2 text-slate-300">
-                    <option value="gallery">Add to 3D Model Gallery</option>
-                    <option value="drawing">Add to Technical Blueprints</option>
-                    <option value="blog">Add to Engineering Blog</option>
-                </select>
-                <textarea id="admin-desc" placeholder="Item short description or content body text..." required class="bg-slate-900 border border-slate-700 rounded p-2 md:col-span-2"></textarea>
-                <button type="submit" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold p-2 rounded md:col-span-2 transition">
-                    ➕ Deploy Document Entry to Live Database
-                </button>
-            </form>
-        </section>
-
     </main>
 
+    <footer class="text-center py-8 border-t border-slate-800 text-xs text-slate-500 font-mono">
+        &copy; 2026 robotlee.xyz | All Rights Reserved.
+    </footer>
+
     <script>
-        // Initialize client configuration properties
-        const SUPABASE_URL = "YOUR_SUPABASE_URL"; 
+        // 1. CONFIGURATION CONFIG SETTINGS
+        const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
         const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+        // Initialize Supabase Client Connection Instance
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Core data rendering initialization lifecycle hook
+        // DOM Elements
+        const galleryContainer = document.getElementById('gallery-container');
+        const drawingsContainer = document.getElementById('drawings-container');
+        const blogContainer = document.getElementById('blog-container');
+        const requestForm = document.getElementById('cad-request-form');
+        const heroViewer = document.getElementById('hero-viewer');
+
+        // Application Startup Lifecycle Hook
         document.addEventListener("DOMContentLoaded", () => {
-            fetchAndRenderContent();
-            
-            // Form Submission listeners
-            document.getElementById('design-intake-form').addEventListener('submit', handleDesignSubmit);
-            document.getElementById('admin-add-form').addEventListener('submit', handleAdminInsert);
+            loadPortfolioData();
+            requestForm.addEventListener("submit", handleFormSubmission);
         });
 
-        // FETCH ALL ENTRIES FROM SUPABASE
-        async function fetchAndRenderContent() {
-            const { data: items, error } = await _supabase
-                .from('portfolio_items')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) return console.error("Data Fetch Failure:", error.message);
-
-            // Clear layout pools before repopulating
-            document.getElementById('gallery-grid').innerHTML = '';
-            document.getElementById('drawings-grid').innerHTML = '';
-            document.getElementById('blog-feed').innerHTML = '';
-
-            items.forEach(item => {
-                if(item.category === 'gallery') {
-                    document.getElementById('gallery-grid').innerHTML += `
-                        <div class="bg-slate-800 border border-slate-700 rounded-lg p-5 flex flex-col justify-between">
-                            <div>
-                                <h3 class="text-lg font-bold mb-1">${item.title}</h3>
-                                <p class="text-sm text-slate-400 mb-4">${item.description}</p>
-                            </div>
-                            <button onclick="removeItem(${item.id})" class="text-xs text-red-400 hover:text-red-300 border border-red-500/20 py-1 rounded bg-red-500/5 mt-2">🗑️ Delete Item</button>
-                        </div>`;
-                } else if(item.category === 'drawing') {
-                    document.getElementById('drawings-grid').innerHTML += `
-                        <div class="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden p-4">
-                            <img src="${item.media_url}" alt="Blueprint" class="w-full h-48 object-cover mb-3 rounded">
-                            <h3 class="font-bold text-md">${item.title}</h3>
-                            <p class="text-xs text-slate-400">${item.description}</p>
-                            <button onclick="removeItem(${item.id})" class="w-full text-xs text-red-400 hover:text-red-300 border border-red-500/20 py-1 rounded bg-red-500/5 mt-3">🗑️ Delete Sheet</button>
-                        </div>`;
-                } else if(item.category === 'blog') {
-                    document.getElementById('blog-feed').innerHTML += `
-                        <article class="p-5 bg-slate-800/30 border border-slate-700/50 rounded-lg flex justify-between items-start">
-                            <div>
-                                <h3 class="text-xl font-bold text-blue-300">${item.title}</h3>
-                                <p class="text-slate-400 text-sm mt-2">${item.description}</p>
-                            </div>
-                            <button onclick="removeItem(${item.id})" class="text-xs text-red-400 hover:text-red-300 border border-red-500/20 px-2 py-1 rounded bg-red-500/5 ml-4">🗑️ Delete Post</button>
-                        </article>`;
-                }
-            });
-        }
-
-        // ADMINISTRATIVE INSERT OPERATION
-        async function handleAdminInsert(e) {
-            e.preventDefault();
-            const title = document.getElementById('admin-title').value;
-            const description = document.getElementById('admin-desc').value;
-            const media_url = document.getElementById('admin-url').value;
-            const category = document.getElementById('admin-category').value;
-
-            const { error } = await _supabase
-                .from('portfolio_items')
-                .insert([{ title, description, media_url, category }]);
-
-            if (error) alert("Error saving data: " + error.message);
-            else {
-                document.getElementById('admin-add-form').reset();
-                fetchAndRenderContent();
-            }
-        }
-
-        // INTERACTIVE INTAKE INGESTION HANDLER
-        async function handleDesignSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('form-name').value;
-            const email = document.getElementById('form-email').value;
-            const software = document.getElementById('form-software').value;
-            const scope = document.getElementById('form-scope').value;
-
-            const { error } = await _supabase
-                .from('design_requests')
-                .insert([{ name, email, software, scope }]);
-
-            if (error) alert("Error submitting request: " + error.message);
-            else {
-                alert("🚀 Success! Your design brief has been securely cataloged in Supabase.");
-                document.getElementById('design-intake-form').reset();
-            }
-        }
-
-        // GLOBAL ADMINISTRATIVE REMOVE HOOK
-        async function removeItem(id) {
-            if(confirm("Confirm destructive execution wipe on selected unique DB ID?")) {
-                const { error } = await _supabase
+        // 2. FETCH AND DISTRIBUTE DATABASE CONTENT
+        async function loadPortfolioData() {
+            try {
+                const { data: items, error } = await _supabase
                     .from('portfolio_items')
-                    .delete()
-                    .eq('id', id);
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-                if (error) alert("Deletion Blocked: " + error.message);
-                else fetchAndRenderContent();
+                if (error) throw error;
+
+                // Clear containers before rendering
+                galleryContainer.html = "";
+                drawingsContainer.html = "";
+                blogContainer.html = "";
+
+                let galleryHtml = '';
+                let drawingsHtml = '';
+                let blogHtml = '';
+                let defaultHeroModelSet = false;
+
+                items.forEach(item => {
+                    if (item.category === 'gallery') {
+                        // Set the first available 3D model link inside the interactive top hero viewer box
+                        if (!defaultHeroModelSet && item.media_url) {
+                            heroViewer.setAttribute('src', item.media_url);
+                            defaultHeroModelSet = true;
+                        }
+
+                        galleryHtml += `
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex justify-between items-start mb-3">
+                                        <span class="px-2 py-1 text-xs font-mono rounded bg-orange-500/10 text-orange-400 border border-orange-500/20">${item.software_tag || 'CAD'}</span>
+                                        <span class="text-xs text-slate-500">${item.version_tag || 'v1.0'}</span>
+                                    </div>
+                                    <h3 class="text-lg font-bold mb-1">${item.title}</h3>
+                                    <p class="text-sm text-slate-400 mb-4">${item.description}</p>
+                                </div>
+                                <div class="space-y-2">
+                                    ${item.stl_file_url ? `<a href="${item.stl_file_url}" download class="block text-center bg-slate-700 hover:bg-slate-600 text-sm font-medium py-2 rounded transition">📥 Download .STL (For Printing)</a>` : ''}
+                                    ${item.source_file_url ? `<a href="${item.source_file_url}" download class="block text-center border border-slate-700 hover:bg-slate-800 text-xs font-mono py-1 rounded text-slate-400">Source Project File</a>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } 
+                    else if (item.category === 'drawing') {
+                        drawingsHtml += `
+                            <div class="group relative bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+                                <img src="${item.media_url || 'images/blueprint-preview.png'}" alt="${item.title}" class="w-full h-64 object-cover opacity-80 group-hover:opacity-100 transition">
+                                <div class="p-4 bg-slate-800/90 absolute bottom-0 inset-x-0 border-t border-slate-700">
+                                    <h3 class="font-bold">${item.title}</h3>
+                                    <p class="text-xs text-slate-400">${item.description}</p>
+                                </div>
+                            </div>
+                        `;
+                    } 
+                    else if (item.category === 'blog') {
+                        const postDate = new Date(item.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                        blogHtml += `
+                            <article class="p-5 bg-slate-800/30 border border-slate-700/50 rounded-lg hover:border-slate-600 transition">
+                                <span class="text-xs font-mono text-blue-400">${postDate}</span>
+                                <h3 class="text-xl font-bold mt-1 mb-2 hover:text-blue-300 cursor-pointer">${item.title}</h3>
+                                <p class="text-slate-400 text-sm">${item.description}</p>
+                            </article>
+                        `;
+                    }
+                });
+
+                // Insert into UI or fallback to empty state notice messages
+                galleryContainer.innerHTML = galleryHtml || `<p class="text-slate-500 text-sm italic col-span-full">No active 3D projects deployed yet.</p>`;
+                drawingsContainer.innerHTML = drawingsHtml || `<p class="text-slate-500 text-sm italic col-span-full">No mechanical drawings uploaded yet.</p>`;
+                blogContainer.innerHTML = blogHtml || `<p class="text-slate-500 text-sm italic">The engineering notebook is currently empty.</p>`;
+
+            } catch (err) {
+                console.error("Error connecting to database data nodes:", err.message);
+            }
+        }
+
+        // 3. SECURELY INSERT CLIENT INTAKE REQUESTS
+        async function handleFormSubmission(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Processing Transmission...";
+
+            const requestPayload = {
+                name: document.getElementById('req-name').value,
+                email: document.getElementById('req-email').value,
+                software: document.getElementById('req-software').value,
+                scope: document.getElementById('req-scope').value
+            };
+
+            try {
+                const { error } = await _supabase
+                    .from('design_requests')
+                    .insert([requestPayload]);
+
+                if (error) throw error;
+
+                alert("🚀 Success! Your structural brief has been securely cataloged.");
+                requestForm.reset();
+
+            } catch (err) {
+                alert("Database submission failure: " + err.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Project Brief";
             }
         }
     </script>
