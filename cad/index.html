@@ -4,38 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAD Showcase | robotlee.xyz</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Model Viewer for interactive WebGL 3D views -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-    <!-- Supabase JS Client library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white">
 
-    <!-- FLOATING TOAST NOTIFICATION SYSTEM -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- NAVIGATION HEADER -->
     <nav class="border-b border-slate-800 p-4 sticky top-0 bg-slate-900/90 backdrop-blur z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="#" class="font-mono text-xl font-bold tracking-wider text-blue-400 hover:text-blue-300 transition">cad.robotlee.xyz</a>
             <div class="space-x-6 text-sm flex items-center">
                 <a href="#gallery" class="hover:text-blue-400 transition">3D Gallery</a>
                 <a href="#drawings" class="hover:text-blue-400 transition">Drawings</a>
-                <a href="#request" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium transition shadow-lg shadow-blue-600/15">Request Design</a>
+                <a href="#connect" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-medium transition shadow-lg shadow-blue-600/15">Get In Touch</a>
             </div>
         </div>
     </nav>
 
-    <!-- HERO INTRODUCTION -->
     <header class="max-w-6xl mx-auto py-16 px-4 grid md:grid-cols-2 gap-12 items-center">
         <div>
             <span class="text-blue-500 font-mono text-xs uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20">Engineering Portfolio</span>
             <h1 class="text-4xl md:text-5xl font-black mt-4 mb-4 leading-tight">CAD & Mechanical Design Showcase</h1>
             <p class="text-slate-400 text-base md:text-lg mb-6 leading-relaxed">Exploring precision engineering through parametric designs, AutoCAD schematics, and functional 3D prints.</p>
             <div class="flex flex-wrap gap-4">
-                <a href="#request" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-semibold px-6 py-3 rounded-lg transition">
+                <a href="#connect" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-semibold px-6 py-3 rounded-lg transition">
                     Inquire Custom CAD
                 </a>
                 <a href="#gallery" class="text-blue-400 hover:text-blue-300 font-medium px-6 py-3 transition flex items-center gap-2">
@@ -44,7 +38,6 @@
             </div>
         </div>
         <div class="bg-slate-850 rounded-2xl h-80 border border-slate-800 relative overflow-hidden shadow-2xl">
-            <!-- Loading Indicator shown while 3D file initializes -->
             <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-slate-500 text-sm gap-2 z-10">
                 <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -64,10 +57,8 @@
         </div>
     </header>
 
-    <!-- CONTENT PORTFOLIO -->
     <main class="max-w-6xl mx-auto px-4 py-12 space-y-20 flex-grow w-full">
         
-        <!-- SECTION 1: 3D MODEL GALLERY & STL DOWNLOADS -->
         <section id="gallery" class="scroll-mt-24">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-slate-800 pb-4">
                 <div>
@@ -79,64 +70,82 @@
                 </div>
             </div>
             <div id="gallery-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically loaded from Supabase gallery_items table -->
                 <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
                     Retrieving CAD projects database...
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 2: TECHNICAL DRAWINGS -->
         <section id="drawings" class="scroll-mt-24">
             <div class="mb-8 border-b border-slate-800 pb-4">
                 <h2 class="text-2xl font-bold tracking-tight">📐 Technical Blueprints</h2>
                 <p class="text-slate-400 text-sm mt-1">Standard engineering sheets, tolerance models, and isometric assemblies.</p>
             </div>
             <div id="drawings-container" class="grid md:grid-cols-2 gap-8">
-                <!-- Dynamically loaded from Supabase technical_drawings table -->
                 <div class="col-span-full py-12 text-center text-slate-500 text-sm italic">
                     Loading reference blueprints...
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3: DESIGN INTAKE REQUEST SUBMISSION -->
-        <section id="request" class="scroll-mt-24 max-w-2xl mx-auto bg-slate-800/40 border border-slate-800 rounded-2xl p-8 backdrop-blur-sm relative shadow-xl">
-            <div class="absolute top-0 right-0 p-4 opacity-5">
-                <svg class="w-24 h-24 text-slate-100" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                </svg>
-            </div>
-            <h2 class="text-2xl font-bold mb-2">💡 Request a Custom CAD Design</h2>
-            <p class="text-slate-400 text-sm mb-6">Need custom engineering components, standard drafting, or parametric models? Submit your spec sheet parameters below to log a production request.</p>
+        <section id="connect" class="scroll-mt-24 max-w-6xl mx-auto grid md:grid-cols-5 gap-8 items-start">
             
-            <form id="cad-request-form" class="space-y-4 text-sm relative z-10">
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Your Name</label>
-                        <input type="text" id="req-name" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="John Doe">
+            <div class="md:col-span-3 bg-slate-800/40 border border-slate-800 rounded-2xl p-6 md:p-8 backdrop-blur-sm relative shadow-xl">
+                <h2 class="text-2xl font-bold mb-2">💡 Request a Custom CAD Design</h2>
+                <p class="text-slate-400 text-sm mb-6">Need custom engineering components or drafting specifications? Submit your details directly to the production queue.</p>
+                
+                <form id="cad-request-form" class="space-y-4 text-sm relative z-10">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Your Name</label>
+                            <input type="text" id="req-name" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Email Address</label>
+                            <input type="email" id="req-email" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="john@example.com">
+                        </div>
                     </div>
                     <div>
-                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Email Address</label>
-                        <input type="email" id="req-email" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="john@example.com">
+                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Target Software Format Preference</label>
+                        <select id="req-software" class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-300 transition">
+                            <option value="FreeCAD (.FCStd)">FreeCAD (.FCStd)</option>
+                            <option value="AutoCAD (.DWG)">AutoCAD (.DWG)</option>
+                            <option value="Universal (.STEP / .STL)">Universal (.STEP / .STL)</option>
+                        </select>
                     </div>
+                    <div>
+                        <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Project Scope &amp; Tolerances</label>
+                        <textarea id="req-scope" rows="4" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="Detail component dimensions, structural fits, mechanical actions..."></textarea>
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 flex justify-center items-center gap-2">
+                        <span>Submit Project Brief</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="md:col-span-2 bg-gradient-to-br from-slate-850 to-slate-900 border border-slate-800/80 rounded-2xl p-6 md:p-8 flex flex-col justify-between h-full min-h-[340px] shadow-xl relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 text-slate-800/20 pointer-events-none transition-transform duration-500 group-hover:scale-110">
+                    <svg class="w-40 h-40" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
                 </div>
-                <div>
-                    <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Target Software Format Preference</label>
-                    <select id="req-software" class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-300 transition">
-                        <option value="FreeCAD (.FCStd)">FreeCAD (.FCStd)</option>
-                        <option value="AutoCAD (.DWG)">AutoCAD (.DWG)</option>
-                        <option value="Universal (.STEP / .STL)">Universal (.STEP / .STL)</option>
-                    </select>
+                
+                <div class="relative z-10">
+                    <span class="text-blue-400 font-mono text-[10px] uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/10">Instant Comms</span>
+                    <h3 class="text-xl font-bold mt-3 mb-2 text-slate-100">Prefer Direct Messaging?</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Skip the technical documentation form framework completely. Jump straight over to our unified communication terminal directory to ping me securely via preferred chat layers or view alternate standard social networks.</p>
                 </div>
-                <div>
-                    <label class="block font-mono text-xs text-slate-400 mb-1.5 uppercase tracking-wide">Project Scope &amp; Tolerances</label>
-                    <textarea id="req-scope" rows="4" required class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg p-3 focus:outline-none focus:border-blue-500 text-slate-100 placeholder:text-slate-600 transition" placeholder="Detail component dimensions, fits, tolerances, mechanical actions, and assembly parameters..."></textarea>
+
+                <div class="relative z-10 pt-4">
+                    <a href="https://contact.robotlee.xyz" target="_blank" rel="noopener noreferrer" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 text-blue-400 hover:text-blue-300 font-bold py-3.5 px-4 rounded-lg transition duration-200 shadow-md flex items-center justify-center gap-2 group-hover:border-blue-500/30">
+                        <span>Open Contact Page</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-lg transition duration-200 shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 flex justify-center items-center gap-2">
-                    <span>Submit Project Brief</span>
-                </button>
-            </form>
+            </div>
+            
         </section>
     </main>
 
@@ -144,7 +153,6 @@
         &copy; 2026 robotlee.xyz | Engineered for Precision.
     </footer>
 
-    <!-- SUPABASE CLIENT ENGINE JAVASCRIPT LAYER -->
     <script>
         // 1. SUPABASE CLIENT CONNECTIONS SETUP
         const SUPABASE_URL = "https://yrpfevxzocpedpthknhi.supabase.co";
@@ -180,7 +188,6 @@
 
         // Application Lifecycles hook
         document.addEventListener("DOMContentLoaded", () => {
-            // Attach WebGL 3D load handlers dynamically to solve the loading freeze
             if (heroViewer) {
                 heroViewer.addEventListener('load', () => {
                     const placeholder = document.getElementById('viewer-placeholder');
@@ -230,17 +237,14 @@
         function loadModelInHero(url, title, isManualClick = false) {
             if (!url) return;
             
-            // If user manually interacts, pause/reset the auto-cycle engine
             if (isManualClick && cycleIntervalId) {
                 clearInterval(cycleIntervalId);
                 cycleIntervalId = null;
                 showToast("Auto-cycle paused. Feel free to inspect this design!");
             }
 
-            // Sync visual active borders in the grid UI
             highlightActiveCard(url);
 
-            // Safeguard: If the model is already actively loaded, don't trigger a visual reload cycle
             if (heroViewer && heroViewer.getAttribute('src') === url) {
                 const placeholder = document.getElementById('viewer-placeholder');
                 if (placeholder) placeholder.classList.add('hidden');
@@ -282,8 +286,7 @@
 
         // AUTO-CYCLE ENGINE SCHEDULER
         function startAutoCycle() {
-            if (loadedModels.length <= 1) return; // No cycling needed if 1 or 0 models exist
-            
+            if (loadedModels.length <= 1) return;
             if (cycleIntervalId) clearInterval(cycleIntervalId);
             
             cycleIntervalId = setInterval(() => {
@@ -296,7 +299,6 @@
         // 2. RETRIEVE PORTFOLIO GALLERY AND DRAWINGS
         async function loadPortfolioData() {
             try {
-                // Fetch independently from individual custom database tables
                 const [galleryResult, drawingsResult] = await Promise.all([
                     _supabase.from('gallery_items').select('*').order('created_at', { ascending: false }),
                     _supabase.from('technical_drawings').select('*').order('created_at', { ascending: false })
@@ -308,7 +310,6 @@
                 const galleryItems = galleryResult.data || [];
                 const technicalDrawings = drawingsResult.data || [];
 
-                // Reset inner containers properly
                 galleryContainer.innerHTML = "";
                 drawingsContainer.innerHTML = "";
 
@@ -316,10 +317,8 @@
                 let drawingsHtml = '';
                 let defaultHeroModelSet = false;
 
-                // Cache active 3D models for cycle loop
                 loadedModels = galleryItems.filter(item => item.media_url);
 
-                // Render Gallery Items
                 galleryItems.forEach(item => {
                     if (!defaultHeroModelSet && item.media_url) {
                         heroViewer.setAttribute('src', item.media_url);
@@ -344,14 +343,13 @@
                                     </a>` : ''}
                                 ${item.source_file_url ? `
                                     <a href="${item.source_file_url}" download class="block text-center border border-slate-800 hover:bg-slate-850/80 text-xs font-mono py-1.5 rounded text-slate-400 hover:text-slate-300 transition">
-                                        Download Source File Document
+                                        Download Source Assembly Document
                                     </a>` : ''}
                             </div>
                         </div>
                     `;
                 });
 
-                // Render Technical Drawings
                 technicalDrawings.forEach(item => {
                     drawingsHtml += `
                         <div class="group relative bg-slate-850 rounded-xl border border-slate-800 overflow-hidden shadow-lg transition hover:border-slate-700">
@@ -366,15 +364,13 @@
                     `;
                 });
 
-                // Update UI or output empty fallback
-                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed inside 'gallery_items'. Manage your database inside Supabase to populate this area.</div>`;
-                drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet. Manage your database inside Supabase to populate this area.</div>`;
+                galleryContainer.innerHTML = galleryHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No active 3D portfolio assets deployed inside 'gallery_items'.</div>`;
+                drawingsContainer.innerHTML = drawingsHtml || `<div class="col-span-full py-12 text-center text-slate-500 text-sm italic border border-dashed border-slate-800 rounded-xl">No engineering sheet blueprints rendered yet.</div>`;
 
                 if (defaultHeroModelSet) {
                     highlightActiveCard(loadedModels[0].media_url);
                     startAutoCycle();
                 } else {
-                    // Fallback for Hero viewer if no items contain media_url
                     heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
                 }
 
@@ -407,7 +403,7 @@
 
             try {
                 if (!_supabase) {
-                    throw new Error("Please try again later.");
+                    throw new Error("Error from our database service provider. Please try again later");
                 }
 
                 const { error } = await _supabase
@@ -416,26 +412,24 @@
 
                 if (error) throw error;
 
-                showToast("🚀 Success! Your structural design brief has been submitted.");
+                showToast("🚀 Success! Your structural design brief has been submitted successfully.");
                 requestForm.reset();
 
             } catch (err) {
-                showToast("Project Brief Submission Failed: " + err.message, "error");
+                showToast("Database Submission Failed: " + err.message, "error");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<span>Submit Project Brief</span>`;
             }
         }
 
-        // 4. FALLBACK DEMO RENDERER (Fallback if Supabase connection fails)
+        // 4. FALLBACK DEMO RENDERER
         function showFallbackDemo() {
-            // Remove Loading visual placeholder
             const placeholder = document.getElementById('viewer-placeholder');
             if (placeholder) placeholder.classList.add('hidden');
             heroViewer.setAttribute('src', "https://modelviewer.dev/shared-assets/models/Astronaut.glb");
             heroViewer.classList.remove('opacity-0');
 
-            // Build Fallback models index for demo auto-cycle
             loadedModels = [
                 { media_url: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", title: "Robotic Gripper Actuator" },
                 { media_url: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb", title: "Neil Armstrong Suit Model" }
@@ -451,9 +445,6 @@
                         <button onclick="loadModelInHero('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Robotic Gripper Actuator', true)" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 mb-2 shadow-lg shadow-blue-600/10">
                             👁️ View in 3D Live Window
                         </button>
-                        <button onclick="showToast('Setup complete! Live download values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5">
-                            📥 Download .STL (Demo Mode)
-                        </button>
                     </div>
                 </div>
                 <div data-model-url="https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb" class="bg-slate-850/50 border border-slate-800 hover:border-slate-700 rounded-xl p-6 flex flex-col justify-between transition hover:-translate-y-1">
@@ -464,9 +455,6 @@
                     <div class="space-y-2.5">
                         <button onclick="loadModelInHero('https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb', 'Neil Armstrong Suit Model', true)" class="w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5 mb-2 shadow-lg shadow-blue-600/10">
                             👁️ View in 3D Live Window
-                        </button>
-                        <button onclick="showToast('Setup complete! Live download values will pull once you add data to your Supabase tables.', 'success')" class="w-full text-center bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-slate-650 text-slate-200 text-xs font-semibold py-2 rounded-lg transition flex items-center justify-center gap-1.5">
-                            📥 Download .STL (Demo Mode)
                         </button>
                     </div>
                 </div>
