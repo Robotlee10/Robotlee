@@ -1,24 +1,29 @@
 {
-  "rewrites": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/",
+      "src": "/",
       "has": [
         {
           "type": "host",
           "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
         }
       ],
-      "destination": "/:subdomain/index.html"
+      "dest": "/$subdomain/index.html"
     },
     {
-      "source": "/:path*",
+      "src": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
         }
       ],
-      "destination": "/:subdomain/:path*"
+      "dest": "/$subdomain/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
