@@ -6,7 +6,7 @@
       "has": [
         {
           "type": "host",
-          "value": "(?<folder>auto|cad|learn|repair|tools|web)\\.robotlee\\.xyz"
+          "value": "(?<folder>auto|cad|learn|repair|tools|web|portfolio)\\.robotlee\\.xyz"
         }
       ],
       "dest": "/$folder/index.html"
@@ -16,7 +16,7 @@
       "has": [
         {
           "type": "host",
-          "value": "(?<folder>auto|cad|learn|repair|tools|web)\\.robotlee\\.xyz"
+          "value": "(?<folder>auto|cad|learn|repair|tools|web|portfolio)\\.robotlee\\.xyz"
         }
       ],
       "dest": "/$folder/$1"
