@@ -1,56 +1,24 @@
 {
-  "redirects": [
-    {
-      "source": "/auto",
-      "destination": "https://auto.robotlee.xyz",
-      "permanent": true
-    },
-    {
-      "source": "/cad",
-      "destination": "https://cad.robotlee.xyz",
-      "permanent": true
-    },
-    {
-      "source": "/learn",
-      "destination": "https://learn.robotlee.xyz",
-      "permanent": true
-    },
-    {
-      "source": "/repair",
-      "destination": "https://repair.robotlee.xyz",
-      "permanent": true
-    },
-    {
-      "source": "/tools",
-      "destination": "https://tools.robotlee.xyz",
-      "permanent": true
-    },
-    {
-      "source": "/web",
-      "destination": "https://web.robotlee.xyz",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/",
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>[^.]+).robotlee.xyz"
+          "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
         }
       ],
-      "destination": "/$subdomain/index.html"
+      "destination": "/:subdomain/index.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>[^.]+).robotlee.xyz"
+          "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
         }
       ],
-      "destination": "/$subdomain/$1"
+      "destination": "/:subdomain/:path*"
     }
   ]
 }
