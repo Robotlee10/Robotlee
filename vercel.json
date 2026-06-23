@@ -6,20 +6,30 @@
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
+          "value": "(?<folder>auto|cad|learn|repair|tools|web)\\.robotlee\\.xyz"
         }
       ],
-      "dest": "/$subdomain/index.html"
+      "dest": "/$folder/index.html"
     },
     {
       "src": "/(.*)",
       "has": [
         {
           "type": "host",
-          "value": "(?<subdomain>[^.]+)\\.robotlee\\.xyz"
+          "value": "(?<folder>auto|cad|learn|repair|tools|web)\\.robotlee\\.xyz"
         }
       ],
-      "dest": "/$subdomain/$1"
+      "dest": "/$folder/$1"
+    },
+    {
+      "src": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*\\.robotlee\\.xyz"
+        }
+      ],
+      "dest": "/404.html"
     },
     {
       "src": "/(.*)",
