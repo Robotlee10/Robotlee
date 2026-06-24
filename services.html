@@ -99,7 +99,7 @@
     </main>
 
     <footer class="border-t border-slate-900 py-6 text-center text-[10px] font-mono text-slate-600 bg-slate-950/60 backdrop-blur-sm w-full">
-        &copy; 2026 robotlee.xyz &bull; Systems mapped across secure operational runtime directories.
+        &copy; 2026 robotlee.xyz &bull; SERVICES &bull; All rights reserved &bull; &bull; <a href="https://robotlee.xyz" class="text-emerald-400 hover:text-emerald-300 transition">Home</a> &bull; <a href="https://tools.robotlee.xyz" class="text-emerald-400 hover:text-emerald-300 transition">Tools</a> &bull; <a href="https://contact.robotlee.xyz" class="text-emerald-400 hover:text-emerald-300 transition">Contact</a> &bull; <a href="https://portfolio.robotlee.xyz" class="text-emerald-400 hover:text-emerald-300 transition">Portfolio</a> &bull; <a href="https://learn.robotlee.xyz" class="text-emerald-400 hover:text-emerald-300 transition">Learn</a>
     </footer>
 
     <script>
@@ -119,7 +119,7 @@
                 .order('sort_order', { ascending: true });
 
                 if (error) {
-                    container.innerHTML = `<div class="font-mono text-xs text-red-500 bg-red-950/20 border border-red-900/50 p-4 rounded-xl inline-block">Supabase Error: ${error.message}</div>`;
+                    container.innerHTML = `<div class="font-mono text-xs text-red-500 bg-red-950/20 border border-red-900/50 p-4 rounded-xl inline-block">Error: Please try again later.</div>`;
                     return;
                 }
 
@@ -169,7 +169,7 @@
                 container.innerHTML = gridHtml;
 
             } catch (err) {
-                container.innerHTML = `<div class="font-mono text-xs text-red-500 bg-red-950/20 border border-red-900/50 p-4 rounded-xl inline-block">Browser Script Error: ${err.message}</div>`;
+                container.innerHTML = `<div class="font-mono text-xs text-red-500 bg-red-950/20 border border-red-900/50 p-4 rounded-xl inline-block">Error: Please try again later.</div>`;
             }
         }
 

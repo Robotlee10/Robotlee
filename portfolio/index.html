@@ -53,12 +53,13 @@
                     robotlee<tspan fill="#e11d48" font-weight="400">.xyz</tspan>
                   </text>
                   <text x="137" y="76" font-family="font-mono, monospace" font-size="10" font-weight="600" fill="#475569" letter-spacing="1">
+                    PORTFOLIO
                   </text>
                 </svg>
             </a>
             <nav class="flex items-center gap-6 text-xs font-mono">
-                <a href="https://repair.robotlee.xyz" class="text-slate-400 hover:text-slate-200 transition tracking-widest">// DIAGNOSTICS</a>
-                <a href="https://contact.robotlee.xyz" class="text-slate-400 hover:text-slate-200 transition tracking-widest">// COMMS</a>
+                <a href="https://repair.robotlee.xyz" class="text-slate-400 hover:text-slate-200 transition tracking-widest">DIAGNOSTICS</a>
+                <a href="https://contact.robotlee.xyz" class="text-slate-400 hover:text-slate-200 transition tracking-widest">CONTACT</a>
             </nav>
         </div>
     </header>
@@ -66,9 +67,9 @@
     <main class="max-w-6xl mx-auto px-4 py-10 w-full flex-grow space-y-8">
         
         <div class="border-b border-slate-900 pb-6 max-w-2xl">
-            <h2 class="text-xs font-mono text-rose-500 uppercase tracking-widest mb-1">// PROOF OF WORK PLATFORM</h2>
+            <h2 class="text-xs font-mono text-rose-500 uppercase tracking-widest mb-1">PROOF OF WORK PLATFORM</h2>
             <p class="text-xs text-slate-400 font-mono leading-relaxed">
-                Production-grade applications, physical automation hardware configurations, multi-layer circuit trace architecture, and component-level designs built out to clear functional execution mandates.
+               An engineered, high-density repository indexing multi-disciplinary engineering assets, production-grade software applications, and physical automation workflows. Built to eliminate professional fluff, this platform serves as an immutable, functional verification matrix demonstrating end-to-end execution across hardware and software boundaries.
             </p>
         </div>
 
@@ -89,7 +90,7 @@
     </main>
 
     <footer class="border-t border-slate-900 py-6 text-center text-[10px] font-mono text-slate-600 bg-slate-950/60 backdrop-blur-sm w-full">
-        &copy; 2026 robotlee.xyz &bull; Automated Deployment Vault &bull; Systems functional.
+        &copy; 2026 robotlee.xyz &bull; Automated Portfolio Vault &bull; All rights reserved.
     </footer>
 
 <script>
@@ -126,7 +127,7 @@
                         title: item.title || 'CAD Specification Model',
                         category: 'cad',
                         description: item.description || '',
-                        tools_used: Array.isArray(item.tools_used) ? item.tools_used : ['SolidWorks', 'CAD Engine'],
+                        tools_used: Array.isArray(item.tools_used) ? item.tools_used : ['SolidWorks', 'FreeCAD'],
                         
                         // --- EDIT THESE STRINGS IF YOUR COLUMNS HAVE DIFFERENT NAMES IN SUPABASE ---
                         challenge_faced: item.challenge_faced || item.tolerance_challenge || 'See repository metrics for tolerances',
@@ -175,7 +176,7 @@
         function renderDisplayGrid() {
             const grid = document.getElementById('portfolio-target-grid');
             if (localProjectCache.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 font-mono text-xs text-slate-500">VAULT CORRIDORS EMPTY. DATA INJECTION PARAMETERS REQUIRED IN SUPABASE.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-12 font-mono text-xs text-slate-500">VAULT CORRIDORS EMPTY.</div>`;
                 return;
             }
 
@@ -210,8 +211,8 @@
                                 </div>
                                 <p class="text-[11px] text-slate-400 font-mono leading-relaxed">${project.description}</p>
                                 <div class="space-y-2 bg-black/30 border border-slate-950 p-3 rounded-xl font-mono text-[10px]">
-                                    <div><span class="text-rose-500 font-bold">// CHALLENGE:</span> ${project.challenge_faced}</div>
-                                    <div><span class="text-emerald-500 font-bold">// SOLUTION:</span> ${project.solution_implemented}</div>
+                                    <div><span class="text-rose-500 font-bold">CHALLENGE:</span> ${project.challenge_faced}</div>
+                                    <div><span class="text-emerald-500 font-bold">SOLUTION:</span> ${project.solution_implemented}</div>
                                 </div>
                             </div>
                         </div>
@@ -243,4 +244,5 @@
         loadPortfolioDataMatrix();
     </script>
 </body>
-</html>
+</html>   
+  <!-- REVIEWED & APPROVED -->

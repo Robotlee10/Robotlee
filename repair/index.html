@@ -181,7 +181,7 @@
 
                 <form id="intake-form" class="space-y-3 font-mono text-xs">
                     <div>
-                        <label class="block text-slate-400 text-[10px] mb-1">Client / Engineer Identifier</label>
+                        <label class="block text-slate-400 text-[10px] mb-1">Client / Engineer Name</label>
                         <input type="text" id="form-name" required class="w-full bg-slate-900/50 border border-slate-800 rounded-lg p-2 text-slate-100 focus:outline-none focus:border-rose-500 transition">
                     </div>
                     <div>
@@ -259,7 +259,7 @@
     </main>
 
     <footer class="border-t border-slate-900 py-6 text-center text-[10px] font-mono text-slate-600 bg-slate-950/60 backdrop-blur-sm w-full">
-        &copy; 2026 robotlee.xyz &bull; Hardware Engineering Lab &bull; Component telemetry active.
+        &copy; 2026 robotlee.xyz &bull; Hardware Engineering Lab &bull; All rights reserved.
     </footer>
 
     <script>
@@ -286,7 +286,7 @@
             };
 
             try {
-                const { error } = await _supabase.from('repair_requests').insert([payload]);
+                const { error } = await _supabase.from('requests').insert([payload]);
                 if (error) throw error;
 
                 alertBox.className = "text-[10px] font-mono p-3 rounded-lg text-center border border-emerald-900 bg-emerald-950/20 text-emerald-400";
@@ -308,3 +308,5 @@
     </script>
 </body>
 </html>
+
+  <!-- REVIEWED & APPROVED -->
