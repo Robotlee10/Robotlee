@@ -1,18 +1,19 @@
 {
   "version": 2,
+  "cleanUrls": true,
   "routes": [
     {
-      "src": "/",
+      "src": "/?",
       "has": [
         {
           "type": "host",
           "value": "(?<folder>auto|cad|learn|repair|tools|web)\\.robotlee\\.xyz"
         }
       ],
-      "dest": "/$folder/index.html"
+      "dest": "/$folder/"
     },
     {
-      "src": "/(.*)",
+      "src": "/((?!.*\\.html$|.*\\.js$|.*\\.css$|.*\\.png$|.*\\.jpg$|.*\\.svg$).*)",
       "has": [
         {
           "type": "host",
@@ -29,7 +30,7 @@
           "value": ".*\\.robotlee\\.xyz"
         }
       ],
-      "dest": "/404.html"
+      "dest": "/404"
     },
     {
       "src": "/(.*)",
