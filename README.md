@@ -1,4 +1,4 @@
-# Hi there, I'm Ahmad Olaitan Adam 👋 
+# Hi there! 👋 I'm Ahmad Olaitan Adam
 ### @Robotlee10 | Aspiring Engineer & Developer
 
 > "Everything will be ok in the end. If it isn't ok, it isn't the end." 🌟
@@ -6,43 +6,40 @@
 ---
 
 ## 🚀 About Me
-I am a passionate developer focused on building clean web applications and learning new technologies. I love diving into code, building things from scratch, and constantly sharpening my engineering skills.
+I am a passionate aspiring engineer and developer focused on building clean web applications, mastering core programming principles, and exploring new backend technologies.
 
-*   🌍 Based in: Nigeria (UTC +01:00)
-*   ✉️ Get in touch: youngengineer1010@gmail.com
-*   💼 Connect with me: [LinkedIn](https://linkedin.com/in/robotlee10)
-*   🐦 Follow my journey: [Twitter/X](https://x.com/robotlee_10)
-
----
-
-## 🛠️ Tech Stack & Learning Journey
-I enjoy working across the web stack and am constantly expanding my toolbelt:
-
-*   **Languages:** HTML, CSS, JavaScript, Python
-*   **Hosting & Deployment:** Vercel
+*   🔭 **Current Focus:** Deepening my understanding of Python and building out seamless web layouts.
+*   🌱 **Learning Journey:** Actively learning Python and sharpening my frontend JavaScript skills.
+*   👯 **Collaboration:** Open to collaborating on lightweight open-source projects or front-end web tools.
+*   🌍 **Location:** Nigeria (UTC +01:00)
 
 ---
 
-## 📁 Featured Projects
+## 🛠️ Technologies & Tools
 
-### 🐍 [Python-learning](https://github.com/Robotlee10/Python-learning)
-*A dedicated space where I document my journey learning Python, containing scripts, exercises, and core programming concepts.*
+### Frontend & Deployment
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
-### 🌐 [robotlee.xyz](https://github.com/Robotlee10/robotlee.xyz)
-*My personal corner of the web built using JavaScript and deployed seamlessly via Vercel.*
-
-### 💻 [Robotlee](https://github.com/Robotlee10/Robotlee)
-*A clean, structured website repository showcasing my foundational HTML and front-end layout work.*
+### Backend & Scripting
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 
 ---
 
-## 📊 GitHub Stats & Activity
+## 📁 Featured Repositories
 
-*   🔥 Over **185+ commits** generated this month alone across multiple repositories.
-*   🚀 Actively shipping features, reviewing PRs, and diving headfirst into open-source habits.
+*   🌐 **[robotlee.xyz](https://github.com/Robotlee10/robotlee.xyz)** — My personal corner of the web, built with JavaScript and deployed via Vercel.
+*   🐍 **[Python-learning](https://github.com/Robotlee10/Python-learning)** — A dedicated space for documenting scripts, syntax tracking, and logic exercises.
+*   💻 **[Robotlee](https://github.com/Robotlee10/Robotlee)** — A clean web structure repository showcasing structural layouts and responsive design foundations.
+
+
+## 🤝 Let's Connect!
+I'm always excited to meet fellow developers, share insights, or chat about engineering. 
+
+*   ✉️ **Email:** youngengineer1010@gmail.com
+*   💼 **LinkedIn:** [Ahmad Olaitan Adam](https://www.linkedin.com/in/robotlee10)
+*   🐦 **Twitter/X:** [@robotlee_10](https://x.com/robotlee_10)
 
 ---
-
 <p align="center">
-  <i>Keep building, keep learning, and trust the process. Let's connect!</i>
+  <i>Keep building, keep learning, and trust the process. 🚀</i>
 </p>
